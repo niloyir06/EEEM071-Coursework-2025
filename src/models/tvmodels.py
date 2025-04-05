@@ -12,12 +12,20 @@ class TorchVisionModel(nn.Module):
         super().__init__()
 
         self.loss = loss
-        self.backbone = tvmodels.__dict__[name](pretrained=pretrained)
-        self.feature_dim = self.backbone.classifier[0].in_features
+        self.backbone = tvmodels.__dict__[name](pretrained=pretrained, **kwargs)
 
-        # overwrite the classifier used for ImageNet pretrianing
-        # nn.Identity() will do nothing, it's just a place-holder
-        self.backbone.classifier = nn.Identity()
+        # Check if the model is a Vision Transformer (e.g., vit_b_16)
+        if name.startswith("vit"):
+            # For Vision Transformers, the classifier head is stored in "heads"
+            self.feature_dim = self.backbone.heads.in_features
+            # Remove the pre-trained classification head
+            self.backbone.heads = nn.Identity()
+        else:
+            # For models like vgg16 and mobilenet_v3_small, the classifier is a Sequential
+            self.feature_dim = self.backbone.classifier[0].in_features
+            self.backbone.classifier = nn.Identity()
+
+        # Define a new classifier for our target task
         self.classifier = nn.Linear(self.feature_dim, num_classes)
 
     def forward(self, x):
