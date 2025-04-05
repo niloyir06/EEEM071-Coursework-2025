@@ -4,7 +4,7 @@ import torch.nn as nn
 import torchvision.models as tvmodels
 
 
-__all__ = ["mobilenet_v3_small", "vgg16", "efficientnet_v2_l"]
+__all__ = ["mobilenet_v3_small", "vgg16", "efficientnet_v2_s"]
 
 
 class TorchVisionModel(nn.Module):
@@ -14,7 +14,7 @@ class TorchVisionModel(nn.Module):
         self.loss = loss
         self.backbone = tvmodels.__dict__[name](pretrained=pretrained)
 
-        if name == "efficientnet_v2_l":
+        if name == "efficientnet_v2_s":
             self.feature_dim = self.backbone.classifier[1].in_features
         else:
             self.feature_dim = self.backbone.classifier[0].in_features
@@ -61,9 +61,9 @@ def mobilenet_v3_small(num_classes, loss={"xent"}, pretrained=True, **kwargs):
     )
     return model
 
-def efficientnet_v2_l(num_classes, loss={"xent"}, pretrained=True, **kwargs):
+def efficientnet_v2_s(num_classes, loss={"xent"}, pretrained=True, **kwargs):
     model = TorchVisionModel(
-        "efficientnet_v2_l",
+        "efficientnet_v2_s",
         num_classes=num_classes,
         loss=loss,
         pretrained=pretrained,
