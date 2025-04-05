@@ -12,6 +12,9 @@ class TorchVisionModel(nn.Module):
         super().__init__()
 
         self.loss = loss
+
+        kwargs.pop("use_gpu", None)
+        
         self.backbone = tvmodels.__dict__[name](pretrained=pretrained, **kwargs)
 
         # Check if the model is a Vision Transformer (e.g., vit_b_16)
