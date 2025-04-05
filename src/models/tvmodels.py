@@ -16,7 +16,7 @@ class TorchVisionModel(nn.Module):
 
         if name == "efficientnet_v2_l":
             self.feature_dim = self.backbone.classifier[1].in_features
-        else
+        else:
             self.feature_dim = self.backbone.classifier[0].in_features
 
         # overwrite the classifier used for ImageNet pretrianing
