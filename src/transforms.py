@@ -139,6 +139,8 @@ def build_transforms(
 
     # build train transformations
     transform_train = []
+    # transform_train += [T.RandomResizedCrop((height,width))]
+    # transform_train += [T.GaussianBlur((5,5))]
     transform_train += [Random2DTranslation(height, width)]
     transform_train += [T.RandomHorizontalFlip()]
     if color_jitter:
